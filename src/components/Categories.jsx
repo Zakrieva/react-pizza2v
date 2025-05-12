@@ -6,6 +6,7 @@ function Categories() {
   const onClickCategory = (index) => {
     setActiveIndex(index);
   };
+
   return (
     <div class="categories">
       <ul>
