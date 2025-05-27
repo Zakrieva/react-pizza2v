@@ -16,9 +16,10 @@ function Home() {
         setItems(arr);
         setIsLoading(false);
       });
+    window.scrollTo(0, 0);
   }, []);
   return (
-    <>
+    <div class="container">
       <div class="content__top">
         <Categories />
         <Sort />
@@ -29,7 +30,7 @@ function Home() {
           ? [...new Array(6)].map((_, i) => <Skeleton key={i} {...items} />)
           : items.map((items, i) => <PizzaBlock key={i} {...items} />)}
       </div>
-    </>
+    </div>
   );
 }
 export default Home;
