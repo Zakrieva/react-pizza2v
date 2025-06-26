@@ -1,23 +1,41 @@
-import React from 'react';
-import { useSelector,useDispatch} from 'react-redux';
+import React, { useRef } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { setSort } from '../redux/slices/filterSlice';
+
+export const sortList = [
+  { name: 'популярности', sortType: 'rating' },
+  { name: 'цене', sortType: 'price' },
+  { name: 'алфавиту', sortType: 'title' },
+];
+
 function Sort() {
-  const sort = useSelector((state)=> state.filter.sort)
-  const dispatch = useDispatch()
+  const sort = useSelector((state) => state.filter.sort);
+  const sortRef = useRef(null)
+  const dispatch = useDispatch();
 
   const [open, setOpen] = React.useState(false);
-  const list = [
-    { name: 'популярности', sortType: 'rating' },
-    { name: 'цене', sortType: 'price' },
-    { name: 'алфавиту', sortType: 'title' },
-  ];
 
   const onClickSort = (i) => {
     dispatch(setSort(i));
     setOpen(false);
   };
+
+  React.useEffect(() => {
+    const handleOnClickOutside = (event) => {
+      if (!event.composedPath().includes(sortRef.current)) (
+        setOpen(false)
+      )
+      
+    }
+    document.body.addEventListener('click', handleOnClickOutside)
+
+    return () => { document.body.removeEventListener('click', handleOnClickOutside) }
+    
+    // document.body.addEventListener('click', (event)=> console.log((event)));
+  }, []);
+  
   return (
-    <div className="sort">
+    <div ref={sortRef} className="sort">
       <div className="sort__label">
         <svg
           width="10"
@@ -33,10 +51,10 @@ function Sort() {
         <b>Сортировка по:</b>
         <span onClick={() => setOpen(!open)}>{sort.name}</span>
       </div>
-      {open ? (
+      {open ?
         <div className="sort__popup">
           <ul>
-            {list.map((obj, i) => (
+            {sortList.map((obj, i) => (
               <li
                 key={i}
                 onClick={() => onClickSort(obj)}
@@ -46,9 +64,7 @@ function Sort() {
             ))}
           </ul>
         </div>
-      ) : (
-        ''
-      )}
+      : ''}
     </div>
   );
 }
