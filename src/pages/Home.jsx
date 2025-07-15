@@ -96,7 +96,7 @@ function Home() {
       <h2 className="content__title">Все пиццы</h2>
       <div className="content__items">
         {isLoading ?
-          [...new Array(6)].map((_, i) => <Skeleton key={i} {...items} />)
+          [...new Array(4)].map((_, i) => <Skeleton key={i} {...items} />)
         :  items.map((items, i) => <PizzaBlock key={i} {...items} />)}
       </div>
       <Pagination currentPage={currentPage} onChangePage={onChangePage} />
