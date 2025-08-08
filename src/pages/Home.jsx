@@ -36,7 +36,7 @@ function Home() {
     const search = searchValue ? `&search=${searchValue}` : '';
 
     dispatch(fetchPizzas({ currentPage, category, sortBy, search }));
-    
+
     window.scrollTo(0, 0);
   };
 
@@ -85,11 +85,18 @@ function Home() {
         <Sort value={sort} />
       </div>
       <h2 className="content__title">Все пиццы</h2>
-      <div className="content__items">
-        {status === 'loading' ?
-          [...new Array(4)].map((_, i) => <Skeleton key={i} {...items} />)
-        : items.map((items, i) => <PizzaBlock key={i} {...items} />)}
-      </div>
+      {status === 'error' ?
+        <div className="content__error-info">
+          <h2>Произошла ошибка 😕</h2>
+          <p>К сожалению, не удалось получить питсы. Попробуйте повторить попытку позже.</p>
+        </div>
+      : <div className="content__items">
+          {status === 'loading' ?
+            [...new Array(4)].map((_, i) => <Skeleton key={i} {...items} />)
+          : items.map((items, i) => <PizzaBlock key={i} {...items} />)}
+        </div>
+      }
+
       <Pagination currentPage={currentPage} onChangePage={onChangePage} />
     </div>
   );
