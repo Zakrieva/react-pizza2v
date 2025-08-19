@@ -9,8 +9,7 @@ import { Skeleton } from '../components/PizzaBlock/Skeleton';
 import { Pagination } from '../components/Pagination';
 import { setCategoryId, setCurrentPage, setFilters } from '../redux/slices/filterSlice';
 import { fetchPizzas } from '../redux/slices/pizzaSlice';
-import { SearchContext } from '../App';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 function Home() {
   const dispatch = useDispatch();
@@ -20,8 +19,8 @@ function Home() {
 
   const { currentPage, categoryId, sort } = useSelector((state) => state.filter);
   const { items, status } = useSelector((state) => state.pizza);
-
-  const { searchValue } = useContext(SearchContext);
+  const { searchValue } = useSelector((state) => state.filter);
+  
 
   const onChangeCategory = (id) => {
     dispatch(setCategoryId(id));
@@ -93,7 +92,12 @@ function Home() {
       : <div className="content__items">
           {status === 'loading' ?
             [...new Array(4)].map((_, i) => <Skeleton key={i} {...items} />)
-          : items.map((items, i) => <PizzaBlock key={i} {...items} />)}
+          : items.map((items, i) => (
+              <Link key={i} to={`/pizza/${i}`} >
+                <PizzaBlock  {...items} />
+              </Link>
+            ))
+          }
         </div>
       }
 
