@@ -7,7 +7,9 @@ const initialState = {
 
 export const selectCartItemById = (id: string) => (state) =>
   state.cart.items.find((obj) => obj.id === id);
+
 export const selectCart = (state) => state.cart;
+
 const cartSlice = createSlice({
   name: 'cart',
   initialState,
