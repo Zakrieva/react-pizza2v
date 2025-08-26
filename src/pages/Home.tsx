@@ -11,22 +11,21 @@ import { setCategoryId, setCurrentPage, setFilters } from '../redux/slices/filte
 import { fetchPizzas } from '../redux/slices/pizzaSlice';
 import { Link, useNavigate } from 'react-router-dom';
 
-function Home() {
+const Home: React.FC = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const isSearch = React.useRef(false);
   const isMounted = React.useRef(false);
 
-  const { currentPage, categoryId, sort } = useSelector((state) => state.filter);
+  const { currentPage, categoryId, sort, searchValue } = useSelector((state) => state.filter);
   const { items, status } = useSelector((state) => state.pizza);
-  const { searchValue } = useSelector((state) => state.filter);
   
 
-  const onChangeCategory = (id) => {
-    dispatch(setCategoryId(id));
+  const onChangeCategory = (idx: number) => {
+    dispatch(setCategoryId(idx));
   };
-  const onChangePage = (number) => {
-    dispatch(setCurrentPage(number));
+  const onChangePage = (page: number) => {
+    dispatch(setCurrentPage(page));
   };
 
   const getPizzas = async () => {
@@ -34,13 +33,15 @@ function Home() {
     const sortBy = `&sortBy=${sort.sortType}`;
     const search = searchValue ? `&search=${searchValue}` : '';
 
-    dispatch(fetchPizzas({ currentPage, category, sortBy, search }));
+    dispatch(
+     // @ts-ignore
+      fetchPizzas({ currentPage, category, sortBy, search }));
 
     window.scrollTo(0, 0);
   };
 
   React.useEffect(() => {
-    console.log(categoryId);
+    
     if (isMounted.current) {
       const queryString = qs.stringify({
         categoryId: categoryId > 0 ? categoryId : null,
@@ -76,7 +77,7 @@ function Home() {
     }
     isSearch.current = false;
   }, [categoryId, sort.sortType, currentPage, searchValue]);
-
+ 
   return (
     <div className="container">
       <div className="content__top">
@@ -92,9 +93,9 @@ function Home() {
       : <div className="content__items">
           {status === 'loading' ?
             [...new Array(4)].map((_, i) => <Skeleton key={i} {...items} />)
-          : items.map((items, i) => (
-              <Link key={i} to={`/pizza/${i}`} >
-                <PizzaBlock  {...items} />
+          : items.map((item) => (
+              <Link key={item.id} to={`/pizza/${item.id}`} >
+                <PizzaBlock  {...item} />
               </Link>
             ))
           }
